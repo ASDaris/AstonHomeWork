@@ -20,7 +20,7 @@ public class Main {
         System.out.println("///////////////////////  Задание 4 ///////////////////////");
         compareNumbers();
         System.out.println("///////////////////////  Задание 5 ///////////////////////");
-        checkSumInRange(a, b);
+        System.out.println(Boolean.toString(checkSumInRange(a, b)));
         System.out.println("///////////////////////  Задание 6 ///////////////////////");
         checkIfPositive(a);
         System.out.println("///////////////////////  Задание 7 ///////////////////////");
@@ -92,9 +92,9 @@ public class Main {
 
     static boolean checkNumPosNeg(int a) {
         if (a >= 0) {
-            return true;
+            return false;
         }
-        else return false;
+        else return true;
     }
 
     static void checkIfPositive(int a) {
@@ -104,12 +104,12 @@ public class Main {
         else System.out.println("Число отрицательно");
     }
 
-    static void checkSumInRange(int a, int b){
+    static boolean checkSumInRange(int a, int b){
         if (a + b >= 10 && b + a <= 20){
-            System.out.println("true");
+            return true;
         }
         else{
-            System.out.println("false");
+            return false;
         }
     }
 
@@ -145,7 +145,7 @@ public class Main {
     }
 
     static void printTreeWords() {
-        System.out.println("Orange, Banana, Apple");
+        System.out.println("Orange \nBanana \nApple");
     }
 
 }
