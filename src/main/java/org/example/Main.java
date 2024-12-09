@@ -1,53 +1,73 @@
 package org.example;
 
+import static org.example.Animal.GetNumberOfAnimals;
+import static org.example.Cat.getNumberOfCats;
+import static org.example.Dog.getNumberOfDogs;
+
+
 public class Main {
     public static void main(String[] args) {
-        Employee[] employees = new Employee[5];
-        employees[0] = new Employee("Ivanov Ivan Ivanovich", "Engineer", "default@gmail.com", "89001112233", 50000, 30);
-        employees[1] = new Employee("Evanov Evan Evanovich", "Janitor", "href@gmail.com", "88002221133", 100000, 20);
-        employees[2] = new Employee("Avanov Avan Avanovich", "HR-Manager", "asdfgh@gmail.com", "89990002211", 25000, 40);
-        employees[3] = new Employee("Ovanov Ovan Ovanovich", "PR-Manager", "ovanOvanich@gmail.com", "81110001100", 35000, 25);
-        employees[4] = new Employee("Uvanov Uvan Uvanovich", "Janitor Assistant", "ieaoUvan@gmail.com", "80001110011", 75000, 35);
+        /////Задание 1////
+        Cat catMurz = new Cat("Murz");
+        Cat catFik = new Cat("Fik");
+        catMurz.run(200);
+        catFik.swim(2);
 
-        for (int i = 0; i < employees.length; i++) {
-            Employee.ShowInfo(employees[i]);
-        }
+        Dog dogNurz = new Dog("Nurz");
+        dogNurz.run(420);
+        dogNurz.swim(7);
+        dogNurz.swim(11);
+
+        getNumberOfDogs();
+        getNumberOfCats();
+        GetNumberOfAnimals();
+
+        Cat[] cats = new Cat[4];
+        cats[0] = new Cat("Sigi");
+        cats[1] = new Cat("Kivi");
+        cats[2] = new Cat("Digi");
+        cats[3] = new Cat("Vivi");
+        Bowl catFood = new Bowl(200);
+
+        cats[0].eat(32);
+        cats[1].eat(132);
+        cats[2].eat(32);
+        cats[3].eat(100);
+
+        cats[0].checkHunger();
+        cats[1].checkHunger();
+        cats[2].checkHunger();
+        cats[3].checkHunger();
+
+        catFood.addFood(500);
+
+        ///Задание 2///
+        Square square = new Square();
+        square.calculateArea(2);
+        square.calculatePerimeter(2);
+        square.borderColor("black");
+        square.fillColor("white");
+        square.showInfo();
+
+        Triangle triangle = new Triangle();
+        triangle.calculateArea(2, 4, 6);
+        triangle.calculatePerimeter(2, 4, 6);
+        triangle.borderColor("black");
+        triangle.fillColor("white");
+        triangle.showInfo();
+
+        Circle circle = new Circle();
+        circle.calculateArea(2);
+        circle.calculatePerimeter(2);
+        circle.borderColor("black");
+        circle.fillColor("white");
+        circle.showInfo();
+
+
+
+
+
+
     }
 }
 
-class Employee {
-    String lastFirstMiddleName;
-    String position;
-    String email;
-    String phone;
-    int salary;
-    int age;
-
-    Employee(String lastFirstMiddleName, String position, String email, String phone, int salary, int age) {
-        this.lastFirstMiddleName = lastFirstMiddleName;
-        this.position = position;
-        this.email = email;
-        this.phone = phone;
-        this.salary = salary;
-        this.age = age;
-    }
-
-    static void ShowInfo(Employee emp) {
-        System.out.println();
-        System.out.println("Last First Middle Name: " + emp.lastFirstMiddleName );
-        System.out.println("Dplznost: " + emp.position);
-        System.out.println("Email: " + emp.email );
-        System.out.println("Phone: " + emp.phone );
-        System.out.println("Salary: " + emp.salary );
-        System.out.println("Age: " + emp.age );
-    }
-}
-
-class Park{
-
-    class Attraction{
-        String name;
-        String workHours;
-        int price;
-    }
-}
