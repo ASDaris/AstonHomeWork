@@ -1,73 +1,38 @@
 package org.example;
 
-import static org.example.Animal.GetNumberOfAnimals;
-import static org.example.Cat.getNumberOfCats;
-import static org.example.Dog.getNumberOfDogs;
-
+import org.example.Exceptions.*;
 
 public class Main {
     public static void main(String[] args) {
-        /////Задание 1////
-        Cat catMurz = new Cat("Murz");
-        Cat catFik = new Cat("Fik");
-        catMurz.run(200);
-        catFik.swim(2);
+        String[][] array = new String[][] {{"3", "4", "5", "3"}, {"2", "4", "5", "2"}};
+        String[][] arrayWrongSize = new String[][] {{"3", "4", "5", "3"}, {"2", "4", "5", "2", "3"}, {"3", "5", "6", "2"}};
+        String[][] arrayWrongData = new String[][] {{"3", "4", "5", "3"}, {"2", "abracadabra", "5", "2"}};
 
-        Dog dogNurz = new Dog("Nurz");
-        dogNurz.run(420);
-        dogNurz.swim(7);
-        dogNurz.swim(11);
+        System.out.println(FourByFourArray(array));
+        System.out.println(FourByFourArray(arrayWrongSize));
+        System.out.println(FourByFourArray(arrayWrongData));
+    }
 
-        getNumberOfDogs();
-        getNumberOfCats();
-        GetNumberOfAnimals();
+    static int FourByFourArray(String[][] myArray) {
+        int result = 0;
+        try{
+            if (myArray.length != 2 || myArray[0].length != 4 || myArray[1].length != 4) {
+                throw new MyArraySizeException("Wrong array length");
+            }
+            for(int i = 0; i < myArray.length; i++){
+                for(int j = 0; j < myArray[i].length; j++){
+                    try{
+                        result += Integer.parseInt(myArray[i][j]);
+                    }catch(NumberFormatException e){
+                        throw new MyArrayDataException("Wrong array data at index of Array["+ i + "][" + j + "] with '" + myArray[i][j] + "' value");
+                    }
+                }
+            }
+        }catch (MyArraySizeException | MyArrayDataException e){
+            System.out.println(e.getMessage());
+        }
 
-        Cat[] cats = new Cat[4];
-        cats[0] = new Cat("Sigi");
-        cats[1] = new Cat("Kivi");
-        cats[2] = new Cat("Digi");
-        cats[3] = new Cat("Vivi");
-        Bowl catFood = new Bowl(200);
-
-        cats[0].eat(32);
-        cats[1].eat(132);
-        cats[2].eat(32);
-        cats[3].eat(100);
-
-        cats[0].checkHunger();
-        cats[1].checkHunger();
-        cats[2].checkHunger();
-        cats[3].checkHunger();
-
-        catFood.addFood(500);
-
-        ///Задание 2///
-        Square square = new Square();
-        square.calculateArea(2);
-        square.calculatePerimeter(2);
-        square.borderColor("black");
-        square.fillColor("white");
-        square.showInfo();
-
-        Triangle triangle = new Triangle();
-        triangle.calculateArea(2, 4, 6);
-        triangle.calculatePerimeter(2, 4, 6);
-        triangle.borderColor("black");
-        triangle.fillColor("white");
-        triangle.showInfo();
-
-        Circle circle = new Circle();
-        circle.calculateArea(2);
-        circle.calculatePerimeter(2);
-        circle.borderColor("black");
-        circle.fillColor("white");
-        circle.showInfo();
-
-
-
-
-
-
+        return result;
     }
 }
 
