@@ -1,38 +1,32 @@
 package org.example;
 
-import org.example.Exceptions.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        String[][] array = new String[][] {{"3", "4", "5", "3"}, {"2", "4", "5", "2"}, {"1", "4", "5", "1"}, {"0", "4", "5", "0"}};
-        String[][] arrayWrongSize = new String[][] {{"3", "4", "5", "3"}, {"2", "4", "5", "2", "3"}, {"3", "5", "6", "2"}};
-        String[][] arrayWrongData = new String[][] {{"3", "4", "5", "3"}, {"2", "abracadabra", "5", "2"}, {"1", "4", "5", "1"}, {"0", "4", "5", "0"}};
+        System.out.println("//////////////////////////////// Задание 1 ////////////////////////////////");
+        ArrayList<String> twentyWords = new ArrayList<>(List.of("Mango", "Space", "Helicopter", "Caramel", "Helicopter", "Snowflake", "Perfume", "Bubblegum", "Harmonica", "Pineapple", "Compass", "Perfume", "Starfish", "Kitten", "Llama", "Quirky", "Saffron", "Tornado", "Cactus", "Perfumer"));
 
-        System.out.println(FourByFourArray(array));
-        System.out.println(FourByFourArray(arrayWrongSize));
-        System.out.println(FourByFourArray(arrayWrongData));
-    }
-
-    static int FourByFourArray(String[][] myArray) {
-        int result = 0;
-        try{
-            if (myArray.length != 4 || myArray[0].length != 4 || myArray[1].length != 4 || myArray[2].length != 4 || myArray[3].length != 4) {
-                throw new MyArraySizeException("Wrong array length");
-            }
-            for(int i = 0; i < myArray.length; i++){
-                for(int j = 0; j < myArray[i].length; j++){
-                    try{
-                        result += Integer.parseInt(myArray[i][j]);
-                    }catch(NumberFormatException e){
-                        throw new MyArrayDataException("Wrong array data at index of Array["+ i + "][" + j + "] with '" + myArray[i][j] + "' value");
-                    }
-                }
-            }
-        }catch (MyArraySizeException | MyArrayDataException e){
-            System.out.println(e.getMessage());
+        HashMap<String, Integer> countWords = new HashMap<String, Integer>();
+        for (String word : twentyWords) {
+            countWords.put(word, countWords.getOrDefault(word, 0) + 1);
         }
+        System.out.println(countWords);
 
-        return result;
+        HashSet<String> originalWords = new HashSet<>(twentyWords);
+        System.out.println("Unique words:" + originalWords);
+
+        System.out.println("//////////////////////////////// Задание 2 ////////////////////////////////");
+        TelephoneBook telephoneBook = new TelephoneBook();
+        telephoneBook.add("+79320001122", "Folaniy");
+        telephoneBook.add("+79320003322", "Folaniy");
+        telephoneBook.add("+79320004422", "Mango");
+        telephoneBook.add("+79320005422", "Lokar");
+
+        telephoneBook.get("Folaniy");
     }
 }
 
