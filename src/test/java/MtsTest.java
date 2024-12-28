@@ -2,12 +2,10 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.*;
+import Pages.MainPage;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class MtsTest {
 
@@ -15,6 +13,7 @@ public class MtsTest {
     static WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     static boolean isCookieAppeared = false;
     static boolean failSafeTriggered = false;
+    MainPage mainPage = new MainPage(driver);
 
     /*
         If the cookie acceptance popup does not appear after loading the main page, it will not appear no matter how much time you wait, causing various problems,
@@ -59,33 +58,82 @@ public class MtsTest {
     }
 
     @Test
-    public void mtsBlockPayIsWorkingTest() {
-        Map<String, String> formData = new HashMap<>();
-        formData.put("phone", "297777777");
-        formData.put("sum", "20");
-        driver.findElement(By.id("connection-phone")).sendKeys(formData.get("phone"));
-        driver.findElement(By.id("connection-sum")).sendKeys(formData.get("sum"));
-
-        WebElement continueButton = driver.findElement(By.xpath("//*[@id=\"pay-connection\"]/button"));
-        continueButton.click();
+    public void mtsBlockPayBaPaidIsDisplayedWithCorrectFieldsTest() {
+        //Get data for a test, pass it to pageObject to fill and apply
+        String sum ="20";
+        mainPage.BlockPayCashOut("297777777", sum);
+        Double i = Double.parseDouble(sum);
+        sum = String.format(Locale.US,"%.2f", i);
+        //Waiting for new frame to open, asserting that frame is present
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("bepaid-app")));
         WebElement cardConfirmWindow = driver.findElement(By.className("bepaid-app"));
-        assert cardConfirmWindow.isDisplayed();
+        Assertions.assertTrue(cardConfirmWindow.isDisplayed()); //BePaid is present
+
+        //Switch to BePaidIframe, test all fields
+        WebElement bePaidIframe = driver.findElement(By.xpath("/html/body/div[8]/div/iframe"));
+        driver.switchTo().frame(bePaidIframe);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("header__close-button"))); //waiting to frame to be full loaded
+        WebElement sumDisplayed = driver.findElement(By.className("pay-description__cost"));
+        Assertions.assertEquals( sum + " BYN", sumDisplayed.getText());
+        WebElement payButton = driver.findElement(By.xpath("/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/button"));
+        Assertions.assertEquals("Оплатить "+ sum +" BYN",payButton.getText());
+        WebElement cardBrands = driver.findElement(By.xpath("/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/app-card-input/form/div[1]/div[1]/app-input/div/div/div[2]/div"));
+        Assertions.assertTrue(cardBrands.isDisplayed());
+        WebElement cvcPlaceHolder = driver.findElement(By.xpath("/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/app-card-input/form/div[1]/div[2]/div[3]/app-input/div/div/div[1]"));
+        Assertions.assertEquals("CVC", cvcPlaceHolder.getText());
+        WebElement numberCardField = driver.findElement(By.xpath("/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/app-card-input/form/div[1]/div[1]/app-input/div/div/div[1]"));
+        Assertions.assertEquals("Номер карты", numberCardField.getText());
+        WebElement expirationDateField = driver.findElement(By.xpath("/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/app-card-input/form/div[1]/div[2]/div[1]/app-input/div/div/div[1]"));
+        Assertions.assertEquals("Срок действия", expirationDateField.getText());
+        WebElement holderNameField = driver.findElement(By.xpath("/html/body/app-root/div/div/div/app-payment-container/section/div/app-card-page/div/div[1]/app-card-input/form/div[1]/div[3]/app-input/div/div/div[1]"));
+        Assertions.assertEquals("Имя держателя (как на карте)", holderNameField.getText());
+        WebElement closeBepaid = driver.findElement(By.className("header__close-button"));
+        closeBepaid.click();
+        driver.switchTo().defaultContent();
+    }
+
+    @Test
+    public void mtsBlockPayDropDownFieldsCorrectTextTest() {
+        // Услуги связи
+        WebElement connectionPhone = driver.findElement(By.id("connection-phone"));
+        Assertions.assertEquals("Номер телефона", connectionPhone.getAttribute("placeholder"));
+        WebElement connectionSum = driver.findElement(By.id("connection-sum"));
+        Assertions.assertEquals("Сумма", connectionSum.getAttribute("placeholder"));
+        WebElement connectionEmail = driver.findElement(By.id("connection-email"));
+        Assertions.assertEquals("E-mail для отправки чека", connectionEmail.getAttribute("placeholder"));
+        // Домашний интернет
+        WebElement internetPhone = driver.findElement(By.id("internet-phone"));
+        Assertions.assertEquals("Номер абонента", internetPhone.getAttribute("placeholder"));
+        WebElement internetSum = driver.findElement(By.id("internet-sum"));
+        Assertions.assertEquals("Сумма", internetSum.getAttribute("placeholder"));
+        WebElement internetEmail = driver.findElement(By.id("internet-email"));
+        Assertions.assertEquals("E-mail для отправки чека", internetEmail.getAttribute("placeholder"));
+        //Рассрочка
+        WebElement scoreInstalmnent = driver.findElement(By.id("score-instalment"));
+        Assertions.assertEquals("Номер счета на 44", scoreInstalmnent.getAttribute("placeholder"));
+        WebElement sumInstalmnent = driver.findElement(By.id("instalment-sum"));
+        Assertions.assertEquals("Сумма", sumInstalmnent.getAttribute("placeholder"));
+        WebElement instalmentEmail = driver.findElement(By.id("instalment-email"));
+        Assertions.assertEquals("E-mail для отправки чека", instalmentEmail.getAttribute("placeholder"));
+        //Задолженность
+        WebElement scoreArrears = driver.findElement(By.id("score-arrears"));
+        Assertions.assertEquals("Номер счета на 2073", scoreArrears.getAttribute("placeholder"));
+        WebElement sumArrears = driver.findElement(By.id("arrears-sum"));
+        Assertions.assertEquals("Сумма", sumArrears.getAttribute("placeholder"));
+        WebElement ArrearsEmail = driver.findElement(By.id("arrears-email"));
+        Assertions.assertEquals("E-mail для отправки чека", ArrearsEmail.getAttribute("placeholder"));
     }
 
     @Test
     public void mtsBlockPayServiceDetailsTest() {
-        WebElement serviceDetails = driver.findElement(By.xpath("//*[@id=\"pay-section\"]/div/div/div[2]/section/div/a"));
-        serviceDetails.click();
-        assert (Objects.equals(driver.getTitle(), "Порядок оплаты и безопасность интернет платежей"));
+        Assertions.assertEquals("Порядок оплаты и безопасность интернет платежей",mainPage.BlockPayServiceDetails().getTitle());
         driver.navigate().back();
     }
 
     @Test
     public void mtsBlockPayNameTest() {
         WebElement blockPay = driver.findElement(By.xpath("//*[@id=\"pay-section\"]/div/div/div[2]/section/div/h2"));
-        String name = blockPay.getText();
-        assert name.equals("Онлайн пополнение\n" + "без комиссии");
+        Assertions.assertEquals("Онлайн пополнение\n" + "без комиссии", blockPay.getText());
     }
 
     @Test
@@ -96,13 +144,13 @@ public class MtsTest {
         List<WebElement> images = partnersBankLogos.findElements(By.tagName("img"));
         for (WebElement image : images) {
             String name = image.getAttribute("alt");
-            assert Objects.equals(name, logosAttributes[picker]);
+            Assertions.assertEquals(name, logosAttributes[picker]);
             picker++;
         }
     }
 
     @AfterAll
-    public static void tearDown() {
+    static public void tearDown() {
         driver.quit();
     }
 }
