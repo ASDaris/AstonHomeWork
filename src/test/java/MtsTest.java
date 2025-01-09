@@ -1,3 +1,6 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -58,6 +61,8 @@ public class MtsTest {
     }
 
     @Test
+    @Description("Проверка работоспособности блока оплаты и текста в нём и окне ввода карты")
+    @Severity(SeverityLevel.CRITICAL)
     public void mtsBlockPayBaPaidIsDisplayedWithCorrectFieldsTest() {
         //Get data for a test, pass it to pageObject to fill and apply
         String sum ="20";
@@ -93,6 +98,7 @@ public class MtsTest {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
     public void mtsBlockPayDropDownFieldsCorrectTextTest() {
         // Услуги связи
         WebElement connectionPhone = driver.findElement(By.id("connection-phone"));
@@ -125,18 +131,21 @@ public class MtsTest {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
     public void mtsBlockPayServiceDetailsTest() {
         Assertions.assertEquals("Порядок оплаты и безопасность интернет платежей",mainPage.BlockPayServiceDetails().getTitle());
         driver.navigate().back();
     }
 
     @Test
+    @Severity(SeverityLevel.MINOR)
     public void mtsBlockPayNameTest() {
         WebElement blockPay = driver.findElement(By.xpath("//*[@id=\"pay-section\"]/div/div/div[2]/section/div/h2"));
         Assertions.assertEquals("Онлайн пополнение\n" + "без комиссии", blockPay.getText());
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
     public void mtsBlockPayPartnersLogosTest() {
         String[] logosAttributes = new String[]{"Visa", "Verified By Visa", "MasterCard", "MasterCard Secure Code", "Белкарт"};
         int picker = 0;
